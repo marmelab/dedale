@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import generateMaze from 'generate-maze';
+import range from 'ramda';
 
 const cellSize = 100;
 const ballSize = 40;
@@ -99,13 +100,24 @@ const getPositionFromAcceleration = (
     };
 };
 
+const getRandomCell = (maze, except) => {
+    const x = Math.floor(Math.random() * maze[0].length);
+    const y = Math.floor(Math.random() * maze[0].length);
+
+    if (x === except.x && y === except.y) {
+        return getRandomCell(maze, except);
+    }
+
+    return {
+        x,
+        y,
+    };
+};
+
 export default ({ xAcceleration, yAcceleration, width, height }) => {
     const [{ x, y }, setCoord] = useState({ x: 0, y: 0 });
     const [maze, setMaze] = useState(generateMaze(width / 100, height / 100));
-    const [goal, setGoal] = useState({
-        x: Math.floor(Math.random() * maze[0].length),
-        y: Math.floor(Math.random() * maze.length),
-    });
+    const [goal, setGoal] = useState(getRandomCell(maze, { x, y }));
     const [level, setLevel] = useState(0);
 
     useEffect(() => {
@@ -130,11 +142,7 @@ export default ({ xAcceleration, yAcceleration, width, height }) => {
             y >= goal.y * cellSize + 10
         ) {
             setMaze(generateMaze(width / 100, height / 100));
-            setCoord({ x: 0, y: 0 });
-            setGoal({
-                x: Math.floor(Math.random() * maze[0].length),
-                y: Math.floor(Math.random() * maze.length),
-            });
+            setGoal(getRandomCell(maze, { x, y }));
             setLevel(v => v + 1);
         }
     });
