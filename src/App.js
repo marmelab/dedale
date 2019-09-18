@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import Labyrinth from './Labyrinth';
 
 const App = () => {
-    const [{ x, y, z, event }, setMotion] = useState({ x: 0, y: 0, z: 0 });
+    const [{ xAcceleration, yAcceleration }, setMotion] = useState({ x: 0, y: 0, z: 0 });
     const [supported, setSupported] = useState(true);
     useEffect(() => {
         if (!window.DeviceMotionEvent) {
@@ -9,12 +10,10 @@ const App = () => {
         }
         const handleMotionEvent = event => {
             setMotion({
-                x: event.accelerationIncludingGravity.x,
-                y: event.accelerationIncludingGravity.y, 
-                z: event.accelerationIncludingGravity.z,
-                event: JSON.stringify(event),
+                xAcceleration: -event.accelerationIncludingGravity.x * 10,
+                yAcceleration: event.accelerationIncludingGravity.y * 10,
             });
-        }
+        };
 
         window.addEventListener('devicemotion', handleMotionEvent, true);
     }, []);
@@ -24,13 +23,13 @@ const App = () => {
     }
 
     return (
-        <>
-            <p>{event}</p>
-            <dl><dt>x:</dt><dd>{x}</dd></dl>
-            <dl><dt>y:</dt><dd>{y}</dd></dl>
-            <dl><dt>z:</dt><dd>{z}</dd></dl>
-        </>
+        <Labyrinth
+            xAcceleration={xAcceleration}
+            yAcceleration={yAcceleration}
+            width={700}
+            height={1000}
+        />
     );
-}
+};
 
 export default App;
