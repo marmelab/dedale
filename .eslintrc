@@ -1,0 +1,40 @@
+{
+    "parser": "babel-eslint",
+    "env": {
+        "es6": true,
+        "browser": true,
+        "mocha": true,
+        "node": true
+    },
+    "extends": [
+        "eslint:recommended",
+        "plugin:import/errors",
+        "plugin:import/warnings",
+        "plugin:react/recommended",
+        "prettier",
+        "prettier/react"
+    ],
+    "plugins": ["import", "react", "prettier", "jest"],
+    "settings": {
+        "react": {
+            "version": "detect"
+        }
+    },
+    "rules": {
+        "react/display-name": "off",
+        "prettier/prettier": ["warn"],
+        "import/no-extraneous-dependencies": "off",
+        "no-console": ["error", { "allow": ["warn", "error"] }],
+        "no-unused-vars": ["error", { "ignoreRestSiblings": true }],
+        "import/no-named-as-default": "off",
+        "react/forbid-prop-types": ["off"],
+        "react/prop-types": ["warn"],
+        "react/jsx-no-bind": ["off"],
+        "react/jsx-indent": ["off"],
+        "react/jsx-indent-props": ["off"],
+        "react/jsx-filename-extension": ["off"]
+    },
+    "globals": {
+        "expect": true
+    }
+}
