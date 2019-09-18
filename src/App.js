@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import debounce from 'lodash/debounce';
 import Labyrinth from './Labyrinth';
 
 const debug = false;

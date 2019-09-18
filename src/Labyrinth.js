@@ -121,8 +121,10 @@ const getHoles = (maze, quantity, except) => {
 export default ({ xAcceleration, yAcceleration, width, height }) => {
     const [{ x, y }, setCoord] = useState({ x: 0, y: 0 });
     const [maze, setMaze] = useState(generateMaze(width / 100, height / 100));
-    const [goal, setGoal] = useState(getRandomCell(maze, [{ x, y }]));
-    const [holes, setHoles] = useState(getHoles(maze, 10, [{ x, y }, goal]));
+    const [goal, setGoal] = useState({ x: width / 100 - 1, y: height / 100 - 1 });
+    const [holes, setHoles] = useState(
+        getHoles(maze, 10, [{ x, y }, { x: width / 100 - 1, y: height / 100 - 1 }]),
+    );
     const [level, setLevel] = useState(0);
     const [lost, setLost] = useState(false);
 
@@ -139,6 +141,16 @@ export default ({ xAcceleration, yAcceleration, width, height }) => {
             ),
         );
     }, [xAcceleration, yAcceleration]);
+
+    const retry = () => {
+        setCoord({ x: 0, y: 0 });
+        setMaze(generateMaze(width / 100, height / 100));
+        const newGoal = getRandomCell(maze, [{ x: 0, y: 0 }]);
+        setGoal(newGoal);
+        setHoles(getHoles(maze, 10, [{ x, y }, newGoal]));
+        setLevel(0);
+        setLost(false);
+    };
 
     useEffect(() => {
         if (
@@ -159,10 +171,10 @@ export default ({ xAcceleration, yAcceleration, width, height }) => {
         if (
             holes.find(hole => {
                 return (
-                    x <= hole.x * cellSize + 60 &&
-                    x >= hole.x * cellSize + 40 &&
-                    y <= hole.y * cellSize + 60 &&
-                    y >= hole.y * cellSize + 40
+                    x <= hole.x * cellSize + 55 &&
+                    x >= hole.x * cellSize + 35 &&
+                    y <= hole.y * cellSize + 55 &&
+                    y >= hole.y * cellSize + 35
                 );
             })
         ) {
@@ -173,7 +185,7 @@ export default ({ xAcceleration, yAcceleration, width, height }) => {
     if (lost) {
         return (
             <div>
-                <p>You lost after {level} level</p>;
+                <p>You lost after {level} level</p>;<button onClick={retry}>Retry</button>
             </div>
         );
     }
