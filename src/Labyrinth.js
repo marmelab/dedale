@@ -115,7 +115,7 @@ const getRandomCell = (maze, except) => {
 };
 
 const getHoles = (maze, quantity, except) => {
-    return range(0, quantity).reduce(acc => [...acc, getRandomCell(maze, [except, ...acc])], []);
+    return range(0, quantity).reduce(acc => [...acc, getRandomCell(maze, [...except, ...acc])], []);
 };
 
 export default ({ xAcceleration, yAcceleration, width, height }) => {
@@ -154,10 +154,10 @@ export default ({ xAcceleration, yAcceleration, width, height }) => {
 
     useEffect(() => {
         if (
-            x <= goal.x * cellSize + 90 &&
-            x >= goal.x * cellSize + 10 &&
-            y <= goal.y * cellSize + 90 &&
-            y >= goal.y * cellSize + 10
+            x <= goal.x * cellSize + 55 &&
+            x >= goal.x * cellSize + 35 &&
+            y <= goal.y * cellSize + 55 &&
+            y >= goal.y * cellSize + 35
         ) {
             setMaze(generateMaze(width / 100, height / 100));
             const newGoal = getRandomCell(maze, [{ x, y }]);
@@ -227,12 +227,12 @@ export default ({ xAcceleration, yAcceleration, width, height }) => {
             <div
                 style={{
                     position: 'absolute',
-                    width: ballSize * 2,
-                    height: ballSize * 2,
-                    left: goal.x * cellSize + 10,
-                    top: goal.y * cellSize + 10,
+                    width: ballSize + 10,
+                    height: ballSize + 10,
+                    left: goal.x * cellSize + 25,
+                    top: goal.y * cellSize + 25,
                     backgroundColor: 'green',
-                    borderRadius: ballSize * 2,
+                    borderRadius: ballSize + 10,
                 }}
             ></div>
             {holes.map(hole => {
