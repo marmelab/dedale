@@ -15,6 +15,59 @@ const boundary = (value, min, max) => {
     return value;
 };
 
+const getCell = (x, y, maze) => {
+    const mazeX = Math.floor(x / cellSize);
+    const mazeY = Math.floor(y / cellSize);
+
+    try {
+        return maze[mazeY][mazeX];
+    } catch (e) {
+        return null;
+    }
+};
+
+const getX = (cell, nextCell, nextX) => {
+    if (cell.x === nextCell.x) {
+        return nextX;
+    }
+    if (nextCell.x > cell.x) {
+        // move to right cell
+        if (cell.right) {
+            // cannot pass
+            return cell.x * 100 + 60;
+        }
+    }
+    if (nextCell.x < cell.x) {
+        // move to left cell
+        if (cell.left) {
+            // cannot pass
+            return cell.x * 100;
+        }
+    }
+    return nextX;
+};
+
+const getY = (cell, nextCell, nextY) => {
+    if (cell.y === nextCell.y) {
+        return nextY;
+    }
+    if (nextCell.y > cell.y) {
+        // move to bottom cell
+        if (cell.bottom) {
+            // cannot pass
+            return cell.y * 100 + 60;
+        }
+    }
+    if (nextCell.y < cell.y) {
+        // move to top cell
+        if (cell.top) {
+            // cannot pass
+            return cell.y * 100;
+        }
+    }
+    return nextY;
+};
+
 const getPositionFromAcceleration = (
     prevX,
     prevY,
@@ -22,12 +75,27 @@ const getPositionFromAcceleration = (
     yAcceleration = 0,
     maxX,
     maxY,
+    maze,
 ) => {
-    const nextX = prevX + xAcceleration;
-    const nextY = prevY + yAcceleration;
+    const nextX = boundary(prevX + xAcceleration, 0, maxX);
+    const nextY = boundary(prevY + yAcceleration, 0, maxY);
+
+    const cell = getCell(prevX, prevY, maze);
+    const nextCell = getCell(
+        nextX > prevX ? nextX + 40 : nextX,
+        nextY > prevY ? nextY + 40 : nextY,
+        maze,
+    );
+    if (!nextCell) {
+        return {
+            x: nextX,
+            y: nextY,
+        };
+    }
+
     return {
-        x: boundary(nextX, 0, maxX),
-        y: boundary(nextY, 0, maxY),
+        x: getX(cell, nextCell, nextX),
+        y: getY(cell, nextCell, nextY),
     };
 };
 
@@ -44,6 +112,7 @@ export default ({ xAcceleration, yAcceleration, width, height }) => {
                 yAcceleration,
                 width - ballSize,
                 height - ballSize,
+                maze,
             ),
         );
     }, [xAcceleration, yAcceleration]);
