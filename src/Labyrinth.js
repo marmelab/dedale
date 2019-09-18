@@ -102,6 +102,11 @@ const getPositionFromAcceleration = (
 export default ({ xAcceleration, yAcceleration, width, height }) => {
     const [{ x, y }, setCoord] = useState({ x: 0, y: 0 });
     const [maze, setMaze] = useState(generateMaze(width / 100, height / 100));
+    const [goal, setGoal] = useState({
+        x: Math.floor(Math.random() * maze[0].length),
+        y: Math.floor(Math.random() * maze.length),
+    });
+    const [level, setLevel] = useState(0);
 
     useEffect(() => {
         setCoord(
@@ -116,6 +121,23 @@ export default ({ xAcceleration, yAcceleration, width, height }) => {
             ),
         );
     }, [xAcceleration, yAcceleration]);
+
+    useEffect(() => {
+        if (
+            x <= goal.x * cellSize + 90 &&
+            x >= goal.x * cellSize + 10 &&
+            y <= goal.y * cellSize + 90 &&
+            y >= goal.y * cellSize + 10
+        ) {
+            setMaze(generateMaze(width / 100, height / 100));
+            setCoord({ x: 0, y: 0 });
+            setGoal({
+                x: Math.floor(Math.random() * maze[0].length),
+                y: Math.floor(Math.random() * maze.length),
+            });
+            setLevel(v => v + 1);
+        }
+    });
 
     return (
         <div style={{ width, height, position: 'absolute' }}>
@@ -151,6 +173,26 @@ export default ({ xAcceleration, yAcceleration, width, height }) => {
                     borderRadius: ballSize,
                 }}
             ></div>
+            <div
+                style={{
+                    position: 'relative',
+                    width: ballSize * 2,
+                    height: ballSize * 2,
+                    left: goal.x * cellSize + 10,
+                    top: goal.y * cellSize - ballSize + 10,
+                    backgroundColor: 'green',
+                    borderRadius: ballSize * 2,
+                }}
+            ></div>
+            <div
+                style={{
+                    position: 'absolute',
+                    right: -120,
+                    top: 0,
+                }}
+            >
+                Level: {level}
+            </div>
         </div>
     );
 };
