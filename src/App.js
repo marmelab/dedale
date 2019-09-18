@@ -10,8 +10,8 @@ const App = () => {
         }
         const handleMotionEvent = event => {
             setMotion({
-                xAcceleration: -event.accelerationIncludingGravity.x * 10,
-                yAcceleration: event.accelerationIncludingGravity.y * 10,
+                xAcceleration: -event.accelerationIncludingGravity.x * 5,
+                yAcceleration: event.accelerationIncludingGravity.y * 5,
             });
         };
 
@@ -26,7 +26,7 @@ const App = () => {
         <Labyrinth
             xAcceleration={xAcceleration}
             yAcceleration={yAcceleration}
-            width={700}
+            width={800}
             height={1000}
         />
     );
