@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --mode production",
-    "start": "webpack-dev-server --open --mode development --port 8000 --hot --host 0.0.0.0"
+    "start": "webpack-dev-server --open --mode development --port 8000 --hot --host 0.0.0.0",
+    "serve": "serve ./dist"
   },
   "author": "",
   "license": "ISC",
@@ -35,6 +36,7 @@
     "eslint-plugin-standard": "^4.0.1",
     "html-loader": "0.5.5",
     "html-webpack-plugin": "^3.2.0",
+    "serve": "11.1.0",
     "webpack": "4.40.2",
     "webpack-dev-server": "^3.8.1",
     "webpack-cli": "^3.3.9"
