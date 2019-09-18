@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import generateMaze from 'generate-maze';
-import range from 'ramda';
+import { range } from 'ramda';
 
 const cellSize = 100;
 const ballSize = 40;
@@ -101,24 +101,30 @@ const getPositionFromAcceleration = (
 };
 
 const getRandomCell = (maze, except) => {
-    const x = Math.floor(Math.random() * maze[0].length);
-    const y = Math.floor(Math.random() * maze[0].length);
+    const randomX = Math.floor(Math.random() * maze[0].length);
+    const randomY = Math.floor(Math.random() * maze[0].length);
 
-    if (x === except.x && y === except.y) {
+    if (except.find(({ x, y }) => x === randomX && y === randomY)) {
         return getRandomCell(maze, except);
     }
 
     return {
-        x,
-        y,
+        x: randomX,
+        y: randomY,
     };
+};
+
+const getHoles = (maze, quantity, except) => {
+    return range(0, quantity).reduce(acc => [...acc, getRandomCell(maze, [except, ...acc])], []);
 };
 
 export default ({ xAcceleration, yAcceleration, width, height }) => {
     const [{ x, y }, setCoord] = useState({ x: 0, y: 0 });
     const [maze, setMaze] = useState(generateMaze(width / 100, height / 100));
-    const [goal, setGoal] = useState(getRandomCell(maze, { x, y }));
+    const [goal, setGoal] = useState(getRandomCell(maze, [{ x, y }]));
+    const [holes, setHoles] = useState(getHoles(maze, 10, [{ x, y }, goal]));
     const [level, setLevel] = useState(0);
+    const [lost, setLost] = useState(false);
 
     useEffect(() => {
         setCoord(
@@ -142,10 +148,35 @@ export default ({ xAcceleration, yAcceleration, width, height }) => {
             y >= goal.y * cellSize + 10
         ) {
             setMaze(generateMaze(width / 100, height / 100));
-            setGoal(getRandomCell(maze, { x, y }));
+            const newGoal = getRandomCell(maze, [{ x, y }]);
+            setGoal(newGoal);
+            setHoles(getHoles(maze, 10, [{ x, y }, newGoal]));
             setLevel(v => v + 1);
         }
     });
+
+    useEffect(() => {
+        if (
+            holes.find(hole => {
+                return (
+                    x <= hole.x * cellSize + 60 &&
+                    x >= hole.x * cellSize + 40 &&
+                    y <= hole.y * cellSize + 60 &&
+                    y >= hole.y * cellSize + 40
+                );
+            })
+        ) {
+            setLost(true);
+        }
+    });
+
+    if (lost) {
+        return (
+            <div>
+                <p>You lost after {level} level</p>;
+            </div>
+        );
+    }
 
     return (
         <div style={{ width, height, position: 'absolute' }}>
@@ -183,15 +214,31 @@ export default ({ xAcceleration, yAcceleration, width, height }) => {
             ></div>
             <div
                 style={{
-                    position: 'relative',
+                    position: 'absolute',
                     width: ballSize * 2,
                     height: ballSize * 2,
                     left: goal.x * cellSize + 10,
-                    top: goal.y * cellSize - ballSize + 10,
+                    top: goal.y * cellSize + 10,
                     backgroundColor: 'green',
                     borderRadius: ballSize * 2,
                 }}
             ></div>
+            {holes.map(hole => {
+                return (
+                    <div
+                        key={`${hole.x}-${hole.y}`}
+                        style={{
+                            position: 'absolute',
+                            width: ballSize + 10,
+                            height: ballSize + 10,
+                            left: hole.x * cellSize + 25,
+                            top: hole.y * cellSize + 25,
+                            backgroundColor: 'black',
+                            borderRadius: ballSize,
+                        }}
+                    ></div>
+                );
+            })}
             <div
                 style={{
                     position: 'absolute',
