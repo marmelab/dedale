@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Labyrinth from './Labyrinth';
 
-const debug = false;
+const debug = true;
 
 const App = () => {
     const [{ xAcceleration, yAcceleration }, setMotion] = useState({ x: 0, y: 0 });
@@ -22,7 +22,20 @@ const App = () => {
         window.addEventListener('devicemotion', handleMotionEvent, true);
     }, []);
 
-    if (!supported) {
+    if (debug) {
+        useEffect(() => {
+            document.addEventListener('mousemove', (event) => {
+                requestAnimationFrame(() =>
+                    setMotion({
+                        xAcceleration: event.movementX,
+                        yAcceleration: event.movementY,
+                    }),
+                );
+            });
+        }, []);
+    }
+
+    if (!supported && !debug) {
         return <p>Not supported</p>;
     }
 
@@ -34,60 +47,6 @@ const App = () => {
                 width={800}
                 height={1000}
             />
-            {debug && (
-                <div
-                    style={{
-                        zIndex: 1000,
-                        position: 'absolute',
-                        rigth: 0,
-                    }}
-                >
-                    <button
-                        onClick={() => {
-                            setMotion({
-                                xAcceleration: 0,
-                                yAcceleration: -40,
-                            });
-                            setTimeout(() => setMotion({ xAcceleration: 0, yAcceleration: 0 }), 10);
-                        }}
-                    >
-                        Move up
-                    </button>
-                    <button
-                        onClick={() => {
-                            setMotion({
-                                xAcceleration: 0,
-                                yAcceleration: 40,
-                            });
-                            setTimeout(() => setMotion({ xAcceleration: 0, yAcceleration: 0 }), 10);
-                        }}
-                    >
-                        Move down
-                    </button>
-                    <button
-                        onClick={() => {
-                            setMotion({
-                                xAcceleration: -40,
-                                yAcceleration: 0,
-                            });
-                            setTimeout(() => setMotion({ xAcceleration: 0, yAcceleration: 0 }), 10);
-                        }}
-                    >
-                        Move left
-                    </button>
-                    <button
-                        onClick={() => {
-                            setMotion({
-                                xAcceleration: 40,
-                                yAcceleration: 0,
-                            });
-                            setTimeout(() => setMotion({ xAcceleration: 0, yAcceleration: 0 }), 10);
-                        }}
-                    >
-                        Move right
-                    </button>
-                </div>
-            )}
         </>
     );
 };
