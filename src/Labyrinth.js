@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import generateMaze from 'generate-maze';
-import { range } from 'ramda';
+import { range, uniqWith } from 'ramda';
 
 const cellSize = 100;
 const ballSize = 40;
@@ -27,43 +27,62 @@ const getCell = (x, y, maze) => {
     }
 };
 
-const getX = (cell, nextCell, nextX) => {
-    if (cell.x === nextCell.x) {
-        return nextX;
-    }
-    if (nextCell.x > cell.x) {
-        // move to right cell
+const getOverLappingCells = (x, y, maze) => {
+    const topLeftCorner = { x, y };
+    const topRightCorner = { x: x + ballSize - 1, y };
+    const bottomLeftCorner = { x, y: y + ballSize - 1 };
+    const bottomRightCorner = { x: x + ballSize - 1, y: y + ballSize - 1 };
+
+    const topLeftCell = getCell(topLeftCorner.x, topLeftCorner.y, maze);
+    const topRightCell = getCell(topRightCorner.x, topRightCorner.y, maze);
+    const bottomLeftCell = getCell(bottomLeftCorner.x, bottomLeftCorner.y, maze);
+    const bottomRightCell = getCell(bottomRightCorner.x, bottomRightCorner.y, maze);
+
+    const cells = uniqWith((a, b) => (a && a.x) === (b && b.x) && (a && a.y) === (b && b.y), [
+        topLeftCell,
+        topRightCell,
+        bottomLeftCell,
+        bottomRightCell,
+    ]).filter(v => !!v);
+
+    return cells;
+};
+
+const getX = (cell, nextX) => {
+    const minX = cell.x * cellSize;
+    const maxX = minX + cellSize;
+    if (nextX + ballSize >= maxX) {
+        // move past right border
         if (cell.right) {
             // cannot pass
-            return cell.x * 100 + 60;
+            return maxX - ballSize;
         }
     }
-    if (nextCell.x < cell.x) {
-        // move to left cell
+    if (nextX <= minX) {
+        // move past left border
         if (cell.left) {
             // cannot pass
-            return cell.x * 100;
+            return minX;
         }
     }
     return nextX;
 };
 
-const getY = (cell, nextCell, nextY) => {
-    if (cell.y === nextCell.y) {
-        return nextY;
-    }
-    if (nextCell.y > cell.y) {
-        // move to bottom cell
+const getY = (cell, nextY) => {
+    const minY = cell.y * cellSize;
+    const maxY = minY + cellSize;
+    if (nextY + ballSize >= maxY) {
+        // move past bottom border
         if (cell.bottom) {
             // cannot pass
-            return cell.y * 100 + 60;
+            return maxY - ballSize;
         }
     }
-    if (nextCell.y < cell.y) {
-        // move to top cell
+    if (nextY <= minY) {
+        // move past top border
         if (cell.top) {
             // cannot pass
-            return cell.y * 100;
+            return minY;
         }
     }
     return nextY;
@@ -81,22 +100,22 @@ const getPositionFromAcceleration = (
     const nextX = boundary(prevX + xAcceleration, 0, maxX);
     const nextY = boundary(prevY + yAcceleration, 0, maxY);
 
-    const cell = getCell(prevX, prevY, maze);
-    const nextCell = getCell(
-        nextX > prevX ? nextX + 40 : nextX,
-        nextY > prevY ? nextY + 40 : nextY,
-        maze,
-    );
-    if (!nextCell) {
-        return {
-            x: nextX,
-            y: nextY,
-        };
-    }
+    const cells = getOverLappingCells(prevX, prevY, maze);
+
+    const cell =
+        cells.length === 4
+            ? {
+                  ...cells[0],
+                  right: cells[0].right || cells[1].bottom,
+                  bottom: cells[0].bottom || cells[2].left,
+                  left: cells[0].left || cells[2].top,
+                  top: cells[0].top || cells[3].left,
+              }
+            : cells[0];
 
     return {
-        x: getX(cell, nextCell, nextX),
-        y: getY(cell, nextCell, nextY),
+        x: getX(cell, nextX),
+        y: getY(cell, nextY),
     };
 };
 
@@ -116,6 +135,24 @@ const getRandomCell = (maze, except) => {
 
 const getHoles = (maze, quantity, except) => {
     return range(0, quantity).reduce(acc => [...acc, getRandomCell(maze, [...except, ...acc])], []);
+};
+
+const getHoleCoord = hole => {
+    const startCellX = hole.x * cellSize;
+    const startCellY = hole.y * cellSize;
+    return {
+        x: startCellX + cellSize / 2,
+        y: startCellY + cellSize / 2,
+    };
+};
+
+const detectCircleCollision = (ball, hole) => {
+    const holeCoord = getHoleCoord(hole);
+    var dx = ball.x + ballSize / 2 - holeCoord.x;
+    var dy = ball.y + ballSize / 2 - holeCoord.y;
+    var distance = Math.sqrt(dx * dx + dy * dy);
+
+    return distance < ballSize / 2 + (ballSize - 30) / 2;
 };
 
 export default ({ xAcceleration, yAcceleration, width, height }) => {
@@ -153,12 +190,7 @@ export default ({ xAcceleration, yAcceleration, width, height }) => {
     };
 
     useEffect(() => {
-        if (
-            x <= goal.x * cellSize + 55 &&
-            x >= goal.x * cellSize + 35 &&
-            y <= goal.y * cellSize + 55 &&
-            y >= goal.y * cellSize + 35
-        ) {
+        if (detectCircleCollision({ x, y }, goal)) {
             setMaze(generateMaze(width / 100, height / 100));
             const newGoal = getRandomCell(maze, [{ x, y }]);
             setGoal(newGoal);
@@ -170,12 +202,7 @@ export default ({ xAcceleration, yAcceleration, width, height }) => {
     useEffect(() => {
         if (
             holes.find(hole => {
-                return (
-                    x <= hole.x * cellSize + 55 &&
-                    x >= hole.x * cellSize + 35 &&
-                    y <= hole.y * cellSize + 55 &&
-                    y >= hole.y * cellSize + 35
-                );
+                return detectCircleCollision({ x, y }, hole);
             })
         ) {
             setLost(true);
@@ -185,7 +212,8 @@ export default ({ xAcceleration, yAcceleration, width, height }) => {
     if (lost) {
         return (
             <div>
-                <p>You lost after {level} level</p>;<button onClick={retry}>Retry</button>
+                <p>You lost after {level} level</p>
+                <button onClick={retry}>Retry</button>
             </div>
         );
     }
