@@ -196,10 +196,8 @@ export default ({ xAcceleration, yAcceleration, width, height }) => {
             setGoal(newGoal);
             setHoles(getHoles(maze, 10, [{ x, y }, newGoal]));
             setLevel(v => v + 1);
+            return;
         }
-    });
-
-    useEffect(() => {
         if (
             holes.find(hole => {
                 return detectCircleCollision({ x, y }, hole);
@@ -252,17 +250,6 @@ export default ({ xAcceleration, yAcceleration, width, height }) => {
                     borderRadius: ballSize,
                 }}
             ></div>
-            <div
-                style={{
-                    position: 'absolute',
-                    width: ballSize + 10,
-                    height: ballSize + 10,
-                    left: goal.x * cellSize + 25,
-                    top: goal.y * cellSize + 25,
-                    backgroundColor: 'green',
-                    borderRadius: ballSize + 10,
-                }}
-            ></div>
             {holes.map(hole => {
                 return (
                     <div
@@ -279,6 +266,17 @@ export default ({ xAcceleration, yAcceleration, width, height }) => {
                     ></div>
                 );
             })}
+            <div
+                style={{
+                    position: 'absolute',
+                    width: ballSize + 10,
+                    height: ballSize + 10,
+                    left: goal.x * cellSize + 25,
+                    top: goal.y * cellSize + 25,
+                    backgroundColor: 'green',
+                    borderRadius: ballSize + 10,
+                }}
+            ></div>
             <div
                 style={{
                     position: 'absolute',
