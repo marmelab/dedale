@@ -201,6 +201,7 @@ export default ({ xAcceleration, yAcceleration, width, height }) => {
             holes: getHoles(width, height, 10, [{ x: 0, y: 0 }, newGoal]),
             level: 0,
             lost: false,
+            safe: true,
         });
     };
 
