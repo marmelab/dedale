@@ -159,7 +159,7 @@ const detectCircleCollision = (ball, hole) => {
 };
 
 export default ({ xAcceleration, yAcceleration, width, height }) => {
-    const [{ x, y, maze, goal, holes, level, lost }, setState] = useState({
+    const [{ x, y, maze, goal, holes, level, lost, safe }, setState] = useState({
         x: 0,
         y: 0,
         maze: generateMaze(width / 100, height / 100),
@@ -167,9 +167,13 @@ export default ({ xAcceleration, yAcceleration, width, height }) => {
         holes: getHoles(width, height, 10, [{ x, y }, { x: width / 100 - 1, y: height / 100 - 1 }]),
         level: 0,
         lost: false,
+        safe: true,
     });
 
     useEffect(() => {
+        if (lost || safe) {
+            return;
+        }
         setState(state => ({
             ...state,
             ...getPositionFromAcceleration(
@@ -198,7 +202,7 @@ export default ({ xAcceleration, yAcceleration, width, height }) => {
     };
 
     useEffect(() => {
-        if (lost) {
+        if (lost || safe) {
             return;
         }
         if (detectCircleCollision({ x, y }, goal)) {
@@ -209,6 +213,7 @@ export default ({ xAcceleration, yAcceleration, width, height }) => {
                 goal: newGoal,
                 holes: getHoles(width, height, 10, [{ x, y }, newGoal]),
                 level: level + 1,
+                safe: true,
             }));
             return;
         }
@@ -300,6 +305,21 @@ export default ({ xAcceleration, yAcceleration, width, height }) => {
             >
                 Level: {level}
             </div>
+            {safe && (
+                <button
+                    style={{
+                        width: 200,
+                        height: 200,
+                        zIndex: 100000,
+                        position: 'absolute',
+                        top: height / 2 - 100,
+                        left: width / 2 - 100,
+                    }}
+                    onClick={() => setState(state => ({ ...state, safe: false }))}
+                >
+                    Go
+                </button>
+            )}
         </div>
     );
 };
