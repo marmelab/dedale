@@ -119,12 +119,12 @@ const getPositionFromAcceleration = (
     };
 };
 
-const getRandomCell = (maze, except) => {
-    const randomX = Math.floor(Math.random() * maze[0].length);
-    const randomY = Math.floor(Math.random() * maze[0].length);
+const getRandomCell = (width, height, except) => {
+    const randomX = Math.floor((Math.random() * width) / cellSize);
+    const randomY = Math.floor((Math.random() * height) / cellSize);
 
     if (except.find(({ x, y }) => x === randomX && y === randomY)) {
-        return getRandomCell(maze, except);
+        return getRandomCell(width, height, except);
     }
 
     return {
@@ -133,8 +133,11 @@ const getRandomCell = (maze, except) => {
     };
 };
 
-const getHoles = (maze, quantity, except) => {
-    return range(0, quantity).reduce(acc => [...acc, getRandomCell(maze, [...except, ...acc])], []);
+const getHoles = (width, height, quantity, except) => {
+    return range(0, quantity).reduce(
+        acc => [...acc, getRandomCell(width, height, [...except, ...acc])],
+        [],
+    );
 };
 
 const getHoleCoord = hole => {
@@ -156,18 +159,20 @@ const detectCircleCollision = (ball, hole) => {
 };
 
 export default ({ xAcceleration, yAcceleration, width, height }) => {
-    const [{ x, y }, setCoord] = useState({ x: 0, y: 0 });
-    const [maze, setMaze] = useState(generateMaze(width / 100, height / 100));
-    const [goal, setGoal] = useState({ x: width / 100 - 1, y: height / 100 - 1 });
-    const [holes, setHoles] = useState(
-        getHoles(maze, 10, [{ x, y }, { x: width / 100 - 1, y: height / 100 - 1 }]),
-    );
-    const [level, setLevel] = useState(0);
-    const [lost, setLost] = useState(false);
+    const [{ x, y, maze, goal, holes, level, lost }, setState] = useState({
+        x: 0,
+        y: 0,
+        maze: generateMaze(width / 100, height / 100),
+        goal: { x: width / 100 - 1, y: height / 100 - 1 },
+        holes: getHoles(width, height, 10, [{ x, y }, { x: width / 100 - 1, y: height / 100 - 1 }]),
+        level: 0,
+        lost: false,
+    });
 
     useEffect(() => {
-        setCoord(
-            getPositionFromAcceleration(
+        setState(state => ({
+            ...state,
+            ...getPositionFromAcceleration(
                 x,
                 y,
                 xAcceleration,
@@ -176,26 +181,35 @@ export default ({ xAcceleration, yAcceleration, width, height }) => {
                 height - ballSize,
                 maze,
             ),
-        );
+        }));
     }, [xAcceleration, yAcceleration]);
 
     const retry = () => {
-        setCoord({ x: 0, y: 0 });
-        setMaze(generateMaze(width / 100, height / 100));
-        const newGoal = getRandomCell(maze, [{ x: 0, y: 0 }]);
-        setGoal(newGoal);
-        setHoles(getHoles(maze, 10, [{ x, y }, newGoal]));
-        setLevel(0);
-        setLost(false);
+        const newGoal = getRandomCell(width, height, [{ x: 0, y: 0 }]);
+        setState({
+            x: 0,
+            y: 0,
+            maze: generateMaze(width / 100, height / 100),
+            goal: newGoal,
+            holes: getHoles(width, height, 10, [{ x, y }, newGoal]),
+            level: 0,
+            lost: false,
+        });
     };
 
     useEffect(() => {
+        if (lost) {
+            return;
+        }
         if (detectCircleCollision({ x, y }, goal)) {
-            setMaze(generateMaze(width / 100, height / 100));
-            const newGoal = getRandomCell(maze, [{ x, y }]);
-            setGoal(newGoal);
-            setHoles(getHoles(maze, 10, [{ x, y }, newGoal]));
-            setLevel(v => v + 1);
+            const newGoal = getRandomCell(width, height, [{ x, y }]);
+            setState(state => ({
+                ...state,
+                maze: generateMaze(width / 100, height / 100),
+                goal: newGoal,
+                holes: getHoles(width, height, 10, [{ x, y }, newGoal]),
+                level: level + 1,
+            }));
             return;
         }
         if (
@@ -203,9 +217,9 @@ export default ({ xAcceleration, yAcceleration, width, height }) => {
                 return detectCircleCollision({ x, y }, hole);
             })
         ) {
-            setLost(true);
+            setState(state => ({ ...state, lost: true }));
         }
-    });
+    }, [x, y]);
 
     if (lost) {
         return (
