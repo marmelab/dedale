@@ -164,7 +164,10 @@ export default ({ xAcceleration, yAcceleration, width, height }) => {
         y: 0,
         maze: generateMaze(width / 100, height / 100),
         goal: { x: width / 100 - 1, y: height / 100 - 1 },
-        holes: getHoles(width, height, 10, [{ x, y }, { x: width / 100 - 1, y: height / 100 - 1 }]),
+        holes: getHoles(width, height, 10, [
+            { x: 0, y: 0 },
+            { x: width / 100 - 1, y: height / 100 - 1 },
+        ]),
         level: 0,
         lost: false,
         safe: true,
@@ -195,7 +198,7 @@ export default ({ xAcceleration, yAcceleration, width, height }) => {
             y: 0,
             maze: generateMaze(width / 100, height / 100),
             goal: newGoal,
-            holes: getHoles(width, height, 10, [{ x, y }, newGoal]),
+            holes: getHoles(width, height, 10, [{ x: 0, y: 0 }, newGoal]),
             level: 0,
             lost: false,
         });
@@ -206,12 +209,13 @@ export default ({ xAcceleration, yAcceleration, width, height }) => {
             return;
         }
         if (detectCircleCollision({ x, y }, goal)) {
-            const newGoal = getRandomCell(width, height, [{ x, y }]);
+            const currentCell = getCell(x, y, maze);
+            const newGoal = getRandomCell(width, height, [currentCell]);
             setState(state => ({
                 ...state,
                 maze: generateMaze(width / 100, height / 100),
                 goal: newGoal,
-                holes: getHoles(width, height, 10, [{ x, y }, newGoal]),
+                holes: getHoles(width, height, 10, [currentCell, newGoal]),
                 level: level + 1,
                 safe: true,
             }));
@@ -226,6 +230,8 @@ export default ({ xAcceleration, yAcceleration, width, height }) => {
         }
     }, [x, y]);
 
+    const go = () => setState(state => ({ ...state, safe: false }));
+
     if (lost) {
         return (
             <div>
@@ -236,7 +242,7 @@ export default ({ xAcceleration, yAcceleration, width, height }) => {
     }
 
     return (
-        <div style={{ width, height, position: 'absolute' }}>
+        <div onClick={go} style={{ width, height, position: 'absolute' }}>
             {maze.map(row =>
                 row.map(({ x, y, top, left, bottom, right }) => {
                     return (
@@ -315,9 +321,9 @@ export default ({ xAcceleration, yAcceleration, width, height }) => {
                         top: height / 2 - 100,
                         left: width / 2 - 100,
                     }}
-                    onClick={() => setState(state => ({ ...state, safe: false }))}
+                    onClick={go}
                 >
-                    Go
+                    Tap to start
                 </button>
             )}
         </div>
