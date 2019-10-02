@@ -2,11 +2,16 @@ import React, { useEffect, useState } from 'react';
 import NoSleep from 'nosleep.js';
 
 import Labyrinth from './Labyrinth';
+import Labyrinth3D from './Labyrinth3D';
 
 const debug = true;
+const enable3D = true;
 
 const App = () => {
     useEffect(() => {
+        if (debug) {
+            return;
+        }
         const noSleep = new NoSleep();
         noSleep.enable();
         return () => {
@@ -50,12 +55,16 @@ const App = () => {
 
     return (
         <>
-            <Labyrinth
-                xAcceleration={xAcceleration}
-                yAcceleration={yAcceleration}
-                width={800}
-                height={1000}
-            />
+            {enable3D ? (
+                <Labyrinth3D width={800} height={1000} />
+            ) : (
+                <Labyrinth
+                    xAcceleration={xAcceleration}
+                    yAcceleration={yAcceleration}
+                    width={800}
+                    height={1000}
+                />
+            )}
         </>
     );
 };
