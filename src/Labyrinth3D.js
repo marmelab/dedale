@@ -14,7 +14,14 @@ export default ({ width, height, xAcceleration, yAcceleration }) => {
     });
     return (
         <>
-            {lost && <p>You lose</p>}
+            {lost ? (
+                <>
+                    <p>You lose after {level} level</p>
+                    <button onClick={retry}>Retry</button>
+                </>
+            ) : (
+                <p>Level: {level}</p>
+            )}
             {safe && <button onClick={go}>GO</button>}
             <x3d is="x3d" width={`${width}px`} height={`${height}px`} onClick={go}>
                 <scene onClick={go} is="scene">
