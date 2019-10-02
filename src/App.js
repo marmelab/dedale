@@ -56,7 +56,12 @@ const App = () => {
     return (
         <>
             {enable3D ? (
-                <Labyrinth3D width={800} height={1000} />
+                <Labyrinth3D
+                    width={800}
+                    height={1000}
+                    xAcceleration={xAcceleration}
+                    yAcceleration={yAcceleration}
+                />
             ) : (
                 <Labyrinth
                     xAcceleration={xAcceleration}
