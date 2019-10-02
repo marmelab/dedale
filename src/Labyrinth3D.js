@@ -14,6 +14,7 @@ export default ({ width, height, xAcceleration, yAcceleration }) => {
     });
     return (
         <>
+            {lost && <p>You lose</p>}
             {safe && <button onClick={go}>GO</button>}
             <x3d is="x3d" width={`${width}px`} height={`${height}px`} onClick={go}>
                 <scene onClick={go} is="scene">
@@ -132,6 +133,46 @@ export default ({ width, height, xAcceleration, yAcceleration }) => {
                                 <plane is="plane" size={`${width / 100},${height / 100}`}></plane>
                             </shape>
                         </transform>
+                        <group>
+                            {holes.map(({ x, y }) => {
+                                return (
+                                    <transform
+                                        key={`${x}-${y}`}
+                                        is="transform"
+                                        translation={`${x + 0.5},${-y - 0.5},0`}
+                                        rotation="1,0,0,1.7"
+                                    >
+                                        <shape is="shape">
+                                            <appearance is="appearance">
+                                                <material
+                                                    is="material"
+                                                    diffuseColor="0 0 0"
+                                                ></material>
+                                            </appearance>
+                                            <cylinder
+                                                is="cylinder"
+                                                radius="0.2"
+                                                solid
+                                                height="0.1"
+                                            />
+                                        </shape>
+                                    </transform>
+                                );
+                            })}
+
+                            <transform
+                                is="transform"
+                                translation={`${goal.x + 0.5},${-goal.y - 0.5},0`}
+                                rotation="1,0,0,1.7"
+                            >
+                                <shape is="shape">
+                                    <appearance is="appearance">
+                                        <material is="material" diffuseColor="0 1 0"></material>
+                                    </appearance>
+                                    <cylinder is="cylinder" radius="0.2" solid height="0.1" />
+                                </shape>
+                            </transform>
+                        </group>
                     </group>
                 </scene>
             </x3d>
