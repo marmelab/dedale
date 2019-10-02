@@ -6,12 +6,13 @@ import Labyrinth from './Labyrinth';
 const debug = true;
 
 const App = () => {
-    const [started, setStarted] = useState(false);
-    const start = () => {
-        setStarted(true);
+    useEffect(() => {
         const noSleep = new NoSleep();
         noSleep.enable();
-    };
+        return () => {
+            noSleep.disable();
+        };
+    }, []);
     const [{ xAcceleration, yAcceleration }, setMotion] = useState({ x: 0, y: 0 });
     const [supported, setSupported] = useState(true);
     useEffect(() => {
@@ -45,10 +46,6 @@ const App = () => {
 
     if (!supported && !debug) {
         return <p>Not supported</p>;
-    }
-
-    if (!started) {
-        return <button onClick={start}>Start</button>;
     }
 
     return (
