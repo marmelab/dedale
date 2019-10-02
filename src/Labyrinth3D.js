@@ -33,16 +33,22 @@ export default ({ width, height, xAcceleration, yAcceleration }) => {
                         zFar="-1"
                         zNear="-1"
                     ></viewpoint>
-                    <pointLight
-                        is="pointLight"
-                        shadowIntensity="0.5"
-                        id="point"
+                    <directionallight
+                        is="directionlight"
+                        id="directional"
+                        direction="0.5 0.5 -1"
                         on="TRUE"
-                        intensity="0.9000"
-                        color="0.0 0.6 0.0"
-                        location={`${width / 200},${-height / 200},13`}
-                        radius="5.0000"
-                    ></pointLight>
+                        intensity="1.0"
+                        shadowintensity="0.4"
+                        shadowcascades="1"
+                        shadowfiltersize="16"
+                        shadowmapsize="512"
+                        color="1,1,1"
+                        znear="-1"
+                        zfar="-1"
+                        shadowsplitfactor="1"
+                        shadowsplitoffset="0.1"
+                    ></directionallight>
                     <transform is="transform" translation="0,0,0">
                         <group is="group">
                             <transform
@@ -175,6 +181,7 @@ export default ({ width, height, xAcceleration, yAcceleration }) => {
                                                     radius="0.2"
                                                     solid
                                                     height="0.1"
+                                                    lit="false"
                                                 />
                                             </shape>
                                         </transform>
@@ -190,7 +197,13 @@ export default ({ width, height, xAcceleration, yAcceleration }) => {
                                         <appearance is="appearance">
                                             <material is="material" diffuseColor="0 1 0"></material>
                                         </appearance>
-                                        <cylinder is="cylinder" radius="0.2" solid height="0.1" />
+                                        <cylinder
+                                            is="cylinder"
+                                            radius="0.2"
+                                            solid
+                                            height="0.1"
+                                            lit="true"
+                                        />
                                     </shape>
                                 </transform>
                             </group>
