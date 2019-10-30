@@ -4,6 +4,7 @@ import metal from './metal.jpg';
 import useDedale from './useDedale';
 import Box from './3d/Box';
 import Sphere from './3d/Sphere';
+import Plane from './3d/Plane';
 
 export default ({ width, height, xAcceleration, yAcceleration }) => {
     const { maze, x, y, go, retry, goal, holes, level, lost, safe } = useDedale({
@@ -110,22 +111,13 @@ export default ({ width, height, xAcceleration, yAcceleration }) => {
                                     }),
                                 )}
                             </group>
-
-                            <transform
-                                is="transform"
-                                translation={`${width / 200},${-height / 200},0`}
-                            >
-                                <shape is="shape" id="ground">
-                                    <appearance is="appearance">
-                                        <imageTexture scale="false" is="imageTexture" url={wood} />
-                                    </appearance>
-                                    <plane
-                                        is="plane"
-                                        lit
-                                        size={`${width / 100},${height / 100}`}
-                                    ></plane>
-                                </shape>
-                            </transform>
+                            <Plane
+                                x={width / 200}
+                                y={-height / 200}
+                                width={width / 100}
+                                height={height / 100}
+                                texture={wood}
+                            />
                             <group is="group">
                                 {holes.map(({ x, y }) => {
                                     return (
