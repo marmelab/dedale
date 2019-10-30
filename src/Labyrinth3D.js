@@ -3,6 +3,7 @@ import wood from './wood.jpg';
 import metal from './metal.jpg';
 import useDedale from './useDedale';
 import Box from './3d/Box';
+import Sphere from './3d/Sphere';
 
 export default ({ width, height, xAcceleration, yAcceleration }) => {
     const { maze, x, y, go, retry, goal, holes, level, lost, safe } = useDedale({
@@ -52,17 +53,13 @@ export default ({ width, height, xAcceleration, yAcceleration }) => {
                     ></directionallight>
                     <transform is="transform" translation="0,0,0">
                         <group is="group">
-                            <transform
-                                is="transform"
-                                translation={`${x / 100 + 0.2} ${-y / 100 - 0.2} 0.2`}
-                            >
-                                <shape id="ball" is="shape">
-                                    <appearance is="appearance">
-                                        <imageTexture is="imageTexture" url={metal} />
-                                    </appearance>
-                                    <sphere is="sphere" lit solid radius={0.2}></sphere>
-                                </shape>
-                            </transform>
+                            <Sphere
+                                x={x / 100 + 0.2}
+                                y={-y / 100 - 0.2}
+                                z={0.2}
+                                radius={0.2}
+                                texture={metal}
+                            />
                             <group is="group">
                                 {maze.map(row =>
                                     row.map(({ x, y, top, left, bottom, right }) => {
