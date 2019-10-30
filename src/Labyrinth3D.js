@@ -2,6 +2,7 @@ import React from 'react';
 import wood from './wood.jpg';
 import metal from './metal.jpg';
 import useDedale from './useDedale';
+import Box from './3d/Box';
 
 export default ({ width, height, xAcceleration, yAcceleration }) => {
     const { maze, x, y, go, retry, goal, holes, level, lost, safe } = useDedale({
@@ -68,76 +69,44 @@ export default ({ width, height, xAcceleration, yAcceleration }) => {
                                         return (
                                             <>
                                                 {top && (
-                                                    <transform
-                                                        key={`top-${x}-${y}`}
-                                                        is="transform"
-                                                        translation={`${x + 0.5} ${-y}`}
-                                                    >
-                                                        <shape is="shape">
-                                                            <appearance is="appearance">
-                                                                <imageTexture
-                                                                    scale="false"
-                                                                    is="imageTexture"
-                                                                    url={wood}
-                                                                />
-                                                            </appearance>
-                                                            <box is="box" size="1,0.1,1"></box>
-                                                        </shape>
-                                                    </transform>
+                                                    <Box
+                                                        x={x + 0.5}
+                                                        y={-y}
+                                                        width={1}
+                                                        height={0.1}
+                                                        depth={1}
+                                                        texture={wood}
+                                                    />
                                                 )}
                                                 {bottom && (
-                                                    <transform
-                                                        key={`bottom-${x}-${y}`}
-                                                        is="transform"
-                                                        translation={`${x + 0.5} ${-y - 1}`}
-                                                    >
-                                                        <shape is="shape" render>
-                                                            <appearance is="appearance">
-                                                                <imageTexture
-                                                                    scale="false"
-                                                                    is="imageTexture"
-                                                                    url={wood}
-                                                                />
-                                                            </appearance>
-                                                            <box is="box" size="1,0.1,1"></box>
-                                                        </shape>
-                                                    </transform>
+                                                    <Box
+                                                        x={x + 0.5}
+                                                        y={-y - 1}
+                                                        width={1}
+                                                        height={0.1}
+                                                        depth={1}
+                                                        texture={wood}
+                                                    />
                                                 )}
                                                 {left && (
-                                                    <transform
-                                                        key={`left-${x}-${y}`}
-                                                        is="transform"
-                                                        translation={`${x} ${-y - 0.5}`}
-                                                    >
-                                                        <shape is="shape">
-                                                            <appearance is="appearance">
-                                                                <imageTexture
-                                                                    scale="false"
-                                                                    is="imageTexture"
-                                                                    url={wood}
-                                                                />
-                                                            </appearance>
-                                                            <box is="box" size="0.1,1,1"></box>
-                                                        </shape>
-                                                    </transform>
+                                                    <Box
+                                                        x={x}
+                                                        y={-y - 0.5}
+                                                        width={0.1}
+                                                        height={1}
+                                                        depth={1}
+                                                        texture={wood}
+                                                    />
                                                 )}
                                                 {right && (
-                                                    <transform
-                                                        key={`right-${x}-${y}`}
-                                                        is="transform"
-                                                        translation={`${x + 1} ${-y - 0.5}`}
-                                                    >
-                                                        <shape is="shape">
-                                                            <appearance is="appearance">
-                                                                <imageTexture
-                                                                    scale="false"
-                                                                    is="imageTexture"
-                                                                    url={wood}
-                                                                />
-                                                            </appearance>
-                                                            <box is="box" size="0.1,1,1"></box>
-                                                        </shape>
-                                                    </transform>
+                                                    <Box
+                                                        x={x + 1}
+                                                        y={-y - 0.5}
+                                                        width={0.1}
+                                                        height={1}
+                                                        depth={1}
+                                                        texture={wood}
+                                                    />
                                                 )}
                                             </>
                                         );
