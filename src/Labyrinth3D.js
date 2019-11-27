@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import wood from './wood.jpg';
 import metal from './metal.jpg';
 import useDedale from './useDedale';
@@ -14,6 +14,10 @@ export default ({ width, height, xAcceleration, yAcceleration }) => {
         xAcceleration,
         yAcceleration,
     });
+
+    useEffect(() => {
+        window.x3dom.reload();
+    }, []);
     return (
         <>
             {lost ? (
@@ -25,7 +29,7 @@ export default ({ width, height, xAcceleration, yAcceleration }) => {
                 <p>Level: {level}</p>
             )}
             {safe && <button onClick={go}>GO</button>}
-            <x3d is="x3d" width={`${width}px`} height={`${height}px`} onClick={go}>
+            <x3d id="x3d" is="x3d" width={`${width}px`} height={`${height}px`} onClick={go}>
                 <scene onClick={go} is="scene">
                     <navigationInfo is="navigationInfo" type='"none"' id="navType"></navigationInfo>
                     <viewpoint

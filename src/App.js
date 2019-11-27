@@ -5,7 +5,6 @@ import Labyrinth from './Labyrinth';
 import Labyrinth3D from './Labyrinth3D';
 
 const debug = true;
-const enable3D = true;
 
 const App = () => {
     useEffect(() => {
@@ -20,6 +19,12 @@ const App = () => {
     }, []);
     const [{ xAcceleration, yAcceleration }, setMotion] = useState({ x: 0, y: 0 });
     const [supported, setSupported] = useState(true);
+    const [use3D, setUse3D] = useState(true);
+
+    const toggle3D = () => {
+        setUse3D(state => !state);
+    };
+
     useEffect(() => {
         if (!window.DeviceMotionEvent) {
             setSupported(false);
@@ -55,7 +60,8 @@ const App = () => {
 
     return (
         <>
-            {enable3D ? (
+            <button onClick={toggle3D}>toggle3d</button>
+            {use3D ? (
                 <Labyrinth3D
                     width={800}
                     height={1000}
