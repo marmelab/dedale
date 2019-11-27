@@ -72,13 +72,11 @@ const App = () => {
         <>
             <button onClick={toggle3D}>toggle3d</button>
             <div onClick={dedaleProps.go} style={{ width, height, position: 'absolute' }}>
-                {lost ? (
+                {lost && (
                     <>
                         <p>You lose after {level} level</p>
                         <button onClick={retry}>Retry</button>
                     </>
-                ) : (
-                    <p>Level: {level}</p>
                 )}
                 {safe && <button onClick={go}>GO</button>}
                 {use3D ? (
