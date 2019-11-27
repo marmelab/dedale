@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import NoSleep from 'nosleep.js';
 
+import useDedale from './useDedale';
 import Labyrinth from './Labyrinth';
 import Labyrinth3D from './Labyrinth3D';
 
 const debug = true;
+
+const width = 800;
+const height = 1000;
 
 const App = () => {
     useEffect(() => {
@@ -53,6 +57,12 @@ const App = () => {
             });
         }, []);
     }
+    const dedaleProps = useDedale({
+        width,
+        height,
+        xAcceleration,
+        yAcceleration,
+    });
 
     if (!supported && !debug) {
         return <p>Not supported</p>;
@@ -63,18 +73,14 @@ const App = () => {
             <button onClick={toggle3D}>toggle3d</button>
             {use3D ? (
                 <Labyrinth3D
-                    width={800}
-                    height={1000}
+                    width={width}
+                    height={height}
                     xAcceleration={xAcceleration}
                     yAcceleration={yAcceleration}
+                    {...dedaleProps}
                 />
             ) : (
-                <Labyrinth
-                    xAcceleration={xAcceleration}
-                    yAcceleration={yAcceleration}
-                    width={800}
-                    height={1000}
-                />
+                <Labyrinth {...dedaleProps} width={width} height={height} />
             )}
         </>
     );

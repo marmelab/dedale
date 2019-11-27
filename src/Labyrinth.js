@@ -1,17 +1,22 @@
 import React from 'react';
-import useDedale from './useDedale';
 
 const cellSize = 100;
 const ballSize = 40;
 
-export default ({ xAcceleration, yAcceleration, width, height }) => {
-    const { maze, x, y, go, retry, goal, holes, level, lost, safe } = useDedale({
-        xAcceleration,
-        yAcceleration,
-        width,
-        height,
-    });
-
+export default ({
+    width,
+    height,
+    maze,
+    x,
+    y,
+    go,
+    retry,
+    goal,
+    holes,
+    level,
+    lost,
+    safe,
+}) => {
     if (lost) {
         return (
             <div>

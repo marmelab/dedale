@@ -1,20 +1,27 @@
 import React, { useEffect } from 'react';
 import wood from './wood.jpg';
 import metal from './metal.jpg';
-import useDedale from './useDedale';
 import Box from './3d/Box';
 import Sphere from './3d/Sphere';
 import Plane from './3d/Plane';
 import Cylinder from './3d/Cylinder';
 
-export default ({ width, height, xAcceleration, yAcceleration }) => {
-    const { maze, x, y, go, retry, goal, holes, level, lost, safe } = useDedale({
-        width,
-        height,
-        xAcceleration,
-        yAcceleration,
-    });
-
+export default ({
+    width,
+    height,
+    xAcceleration,
+    yAcceleration,
+    maze,
+    x,
+    y,
+    go,
+    retry,
+    goal,
+    holes,
+    level,
+    lost,
+    safe,
+}) => {
     useEffect(() => {
         window.x3dom.reload();
     }, []);
