@@ -31,11 +31,8 @@ export default ({ width, height, xAcceleration, yAcceleration }) => {
                         is="viewpoint"
                         bind="true"
                         centerOfRotation={`${width / 200},${-height / 200},0`}
-                        fieldOfView="0.785398"
                         isActive
                         position={`${width / 200},${-height / 200},13`}
-                        zFar="-1"
-                        zNear="-1"
                     ></viewpoint>
                     <directionallight
                         is="directionlight"
@@ -126,7 +123,7 @@ export default ({ width, height, xAcceleration, yAcceleration }) => {
                                             key={`${x}-${y}`}
                                             x={x + 0.5}
                                             y={-y - 0.5}
-                                            rotation="1,0,0,1.7"
+                                            rotation={`1,0,0,${Math.PI / 2}`}
                                             radius={0.2}
                                             height={0.1}
                                             diffuseColor="0 0 0"
@@ -137,7 +134,7 @@ export default ({ width, height, xAcceleration, yAcceleration }) => {
                                 <Cylinder
                                     x={goal.x + 0.5}
                                     y={-goal.y - 0.5}
-                                    rotation="1,0,0,1.7"
+                                    rotation={`1,0,0,${Math.PI / 2}`}
                                     radius={0.2}
                                     height={0.1}
                                     diffuseColor="0 1 0"
