@@ -57,7 +57,7 @@ const App = () => {
             });
         }, []);
     }
-    const dedaleProps = useDedale({
+    const { safe, go, level, lost, retry, ...dedaleProps } = useDedale({
         width,
         height,
         xAcceleration,
@@ -71,17 +71,52 @@ const App = () => {
     return (
         <>
             <button onClick={toggle3D}>toggle3d</button>
-            {use3D ? (
-                <Labyrinth3D
-                    width={width}
-                    height={height}
-                    xAcceleration={xAcceleration}
-                    yAcceleration={yAcceleration}
-                    {...dedaleProps}
-                />
-            ) : (
-                <Labyrinth {...dedaleProps} width={width} height={height} />
-            )}
+            <div onClick={dedaleProps.go} style={{ width, height, position: 'absolute' }}>
+                {lost ? (
+                    <>
+                        <p>You lose after {level} level</p>
+                        <button onClick={retry}>Retry</button>
+                    </>
+                ) : (
+                    <p>Level: {level}</p>
+                )}
+                {safe && <button onClick={go}>GO</button>}
+                {use3D ? (
+                    <Labyrinth3D
+                        width={width}
+                        height={height}
+                        xAcceleration={xAcceleration}
+                        yAcceleration={yAcceleration}
+                        {...dedaleProps}
+                    />
+                ) : (
+                    <Labyrinth {...dedaleProps} width={width} height={height} />
+                )}
+                <div
+                    style={{
+                        position: 'absolute',
+                        right: -120,
+                        top: 0,
+                    }}
+                >
+                    Level: {level}
+                </div>
+                {safe && (
+                    <button
+                        style={{
+                            width: 200,
+                            height: 200,
+                            zIndex: 100000,
+                            position: 'absolute',
+                            top: height / 2 - 100,
+                            left: width / 2 - 100,
+                        }}
+                        onClick={go}
+                    >
+                        Tap to start
+                    </button>
+                )}
+            </div>
         </>
     );
 };

@@ -6,36 +6,12 @@ import Sphere from './3d/Sphere';
 import Plane from './3d/Plane';
 import Cylinder from './3d/Cylinder';
 
-export default ({
-    width,
-    height,
-    xAcceleration,
-    yAcceleration,
-    maze,
-    x,
-    y,
-    go,
-    retry,
-    goal,
-    holes,
-    level,
-    lost,
-    safe,
-}) => {
+export default ({ width, height, xAcceleration, yAcceleration, maze, x, y, go, goal, holes }) => {
     useEffect(() => {
         window.x3dom.reload();
     }, []);
     return (
         <>
-            {lost ? (
-                <>
-                    <p>You lose after {level} level</p>
-                    <button onClick={retry}>Retry</button>
-                </>
-            ) : (
-                <p>Level: {level}</p>
-            )}
-            {safe && <button onClick={go}>GO</button>}
             <x3d id="x3d" is="x3d" width={`${width}px`} height={`${height}px`} onClick={go}>
                 <scene onClick={go} is="scene">
                     <navigationInfo is="navigationInfo" type='"none"' id="navType"></navigationInfo>

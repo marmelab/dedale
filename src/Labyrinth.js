@@ -9,25 +9,11 @@ export default ({
     maze,
     x,
     y,
-    go,
-    retry,
     goal,
     holes,
-    level,
-    lost,
-    safe,
 }) => {
-    if (lost) {
-        return (
-            <div>
-                <p>You lost after {level} level</p>
-                <button onClick={retry}>Retry</button>
-            </div>
-        );
-    }
-
     return (
-        <div onClick={go} style={{ width, height, position: 'absolute' }}>
+        <div style={{ width, height, position: 'absolute' }}>
             {maze.map(row =>
                 row.map(({ x, y, top, left, bottom, right }) => {
                     return (
@@ -87,30 +73,6 @@ export default ({
                     borderRadius: ballSize + 10,
                 }}
             ></div>
-            <div
-                style={{
-                    position: 'absolute',
-                    right: -120,
-                    top: 0,
-                }}
-            >
-                Level: {level}
-            </div>
-            {safe && (
-                <button
-                    style={{
-                        width: 200,
-                        height: 200,
-                        zIndex: 100000,
-                        position: 'absolute',
-                        top: height / 2 - 100,
-                        left: width / 2 - 100,
-                    }}
-                    onClick={go}
-                >
-                    Tap to start
-                </button>
-            )}
         </div>
     );
 };
