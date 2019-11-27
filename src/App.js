@@ -5,7 +5,7 @@ import useDedale from './useDedale';
 import Labyrinth from './Labyrinth';
 import Labyrinth3D from './Labyrinth3D';
 
-const debug = true;
+const debug = false;
 
 const width = 800;
 const height = 1000;
@@ -85,8 +85,8 @@ const App = () => {
                     <Labyrinth3D
                         width={width}
                         height={height}
-                        xAcceleration={xAcceleration}
-                        yAcceleration={yAcceleration}
+                        xAcceleration={safe || lost ? 0 : xAcceleration}
+                        yAcceleration={safe || lost ? 0 : yAcceleration}
                         {...dedaleProps}
                     />
                 ) : (
