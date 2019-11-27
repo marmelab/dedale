@@ -5,6 +5,7 @@ import useDedale from './useDedale';
 import Box from './3d/Box';
 import Sphere from './3d/Sphere';
 import Plane from './3d/Plane';
+import Cylinder from './3d/Cylinder';
 
 export default ({ width, height, xAcceleration, yAcceleration }) => {
     const { maze, x, y, go, retry, goal, holes, level, lost, safe } = useDedale({
@@ -121,49 +122,26 @@ export default ({ width, height, xAcceleration, yAcceleration }) => {
                             <group is="group">
                                 {holes.map(({ x, y }) => {
                                     return (
-                                        <transform
+                                        <Cylinder
                                             key={`${x}-${y}`}
-                                            is="transform"
-                                            translation={`${x + 0.5},${-y - 0.5},0`}
+                                            x={x + 0.5}
+                                            y={-y - 0.5}
                                             rotation="1,0,0,1.7"
-                                        >
-                                            <shape is="shape">
-                                                <appearance is="appearance">
-                                                    <material
-                                                        is="material"
-                                                        diffuseColor="0 0 0"
-                                                    ></material>
-                                                </appearance>
-                                                <cylinder
-                                                    is="cylinder"
-                                                    radius="0.2"
-                                                    solid
-                                                    height="0.1"
-                                                    lit="false"
-                                                />
-                                            </shape>
-                                        </transform>
+                                            radius={0.2}
+                                            height={0.1}
+                                            diffuseColor="0 0 0"
+                                        />
                                     );
                                 })}
 
-                                <transform
-                                    is="transform"
-                                    translation={`${goal.x + 0.5},${-goal.y - 0.5},0`}
+                                <Cylinder
+                                    x={goal.x + 0.5}
+                                    y={-goal.y - 0.5}
                                     rotation="1,0,0,1.7"
-                                >
-                                    <shape is="shape">
-                                        <appearance is="appearance">
-                                            <material is="material" diffuseColor="0 1 0"></material>
-                                        </appearance>
-                                        <cylinder
-                                            is="cylinder"
-                                            radius="0.2"
-                                            solid
-                                            height="0.1"
-                                            lit="true"
-                                        />
-                                    </shape>
-                                </transform>
+                                    radius={0.2}
+                                    height={0.1}
+                                    diffuseColor="0 1 0"
+                                />
                             </group>
                         </group>
                     </transform>
