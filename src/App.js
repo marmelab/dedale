@@ -29,18 +29,24 @@ const App = () => {
         };
 
         window.addEventListener('devicemotion', handleMotionEvent, true);
+
+        return () => window.removeEventListener('devicemotion', handleMotionEvent);
     }, []);
 
     if (debug) {
         useEffect(() => {
-            document.addEventListener('mousemove', event => {
+            const handleMouseMove = event => {
                 requestAnimationFrame(() =>
                     setMotion({
                         xAcceleration: event.movementX,
                         yAcceleration: event.movementY,
                     }),
                 );
-            });
+            };
+
+            document.addEventListener('mousemove', handleMouseMove);
+
+            return () => window.removeEventListener('mousemove', handleMouseMove);
         }, []);
     }
 
