@@ -22,8 +22,8 @@ const Labyrinth = ({
 }) => {
     return (
         <Canvas camera={{ position: [0, 0, 10] }}>
-            <ambientLight />
-            <pointLight position={[10, 10, 10]} />
+            <ambientLight intensity={0.5} />
+            <directionalLight position={[10, 10, 10]} />
             <Sphere
                 x={x / 100 + 0.2 - width / 200}
                 y={-y / 100 - 0.2 + height / 200}
