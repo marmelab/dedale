@@ -1,11 +1,22 @@
-import React from 'react';
+import React, { Suspense } from 'react';
+import * as THREE from 'three';
+import { useLoader } from 'react-three-fiber';
 
-const Box = ({ x, y, z, width, height, depth, texture }) => {
+const RawBox = ({ x, y, z, width, height, depth, texture }) => {
+    const textureMap = useLoader(THREE.TextureLoader, texture);
     return (
         <mesh position={[x, y, z]} scale={[1, 1, 1]}>
             <boxBufferGeometry args={[width, height, depth]} />
-            <meshStandardMaterial color="orange" />
+            <meshStandardMaterial map={textureMap} />
         </mesh>
+    );
+};
+
+const Box = props => {
+    return (
+        <Suspense fallback={null}>
+            <RawBox {...props} />
+        </Suspense>
     );
 };
 

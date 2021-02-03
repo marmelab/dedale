@@ -1,8 +1,7 @@
 import React from 'react';
-import { Canvas } from 'react-three-fiber';
+import { Canvas, Suspense } from 'react-three-fiber';
 
 import wood from './wood.jpg';
-
 import Box from './three/Box';
 
 const Labyrinth = ({
