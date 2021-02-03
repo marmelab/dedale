@@ -4,6 +4,7 @@ import { Canvas, Suspense } from 'react-three-fiber';
 import wood from './wood.jpg';
 import Box from './three/Box';
 import Plane from './three/Plane';
+import Cylinder from './three/Cylinder';
 
 const Labyrinth = ({
     width,
@@ -73,6 +74,19 @@ const Labyrinth = ({
                     );
                 }),
             )}
+            {holes.map(({ x, y }) => {
+                return (
+                    <Cylinder
+                        key={`${x}-${y}`}
+                        x={x + 0.5}
+                        y={-y - 0.5}
+                        radius={0.2}
+                        height={0.1}
+                        color="black"
+                    />
+                );
+            })}
+            <Cylinder x={goal.x + 0.5} y={-goal.y - 0.5} radius={0.2} height={0.1} color="black" />
             <Plane
                 x={width / 200}
                 y={-height / 200}
