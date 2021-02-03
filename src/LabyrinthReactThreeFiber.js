@@ -2,9 +2,11 @@ import React from 'react';
 import { Canvas, Suspense } from 'react-three-fiber';
 
 import wood from './wood.jpg';
+import metal from './metal.jpg';
 import Box from './three/Box';
 import Plane from './three/Plane';
 import Cylinder from './three/Cylinder';
+import Sphere from './three/Sphere';
 
 const Labyrinth = ({
     width,
@@ -22,6 +24,7 @@ const Labyrinth = ({
         <Canvas>
             <ambientLight />
             <pointLight position={[10, 10, 10]} />
+            <Sphere x={x / 100 + 0.2} y={-y / 100 - 0.2} z={0.2} radius={0.2} texture={metal} />
             {maze.map(row =>
                 row.map(({ x, y, top, left, bottom, right }) => {
                     return (

@@ -6,7 +6,7 @@ import Labyrinth from './Labyrinth';
 import Labyrinth3D from './Labyrinth3D';
 import LabyrinthThree from './LabyrinthReactThreeFiber';
 
-const debug = false;
+const debug = true;
 
 const width = 800;
 const height = 1000;
