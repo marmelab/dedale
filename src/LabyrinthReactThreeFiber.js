@@ -3,6 +3,7 @@ import { Canvas, Suspense } from 'react-three-fiber';
 
 import wood from './wood.jpg';
 import Box from './three/Box';
+import Plane from './three/Plane';
 
 const Labyrinth = ({
     width,
@@ -72,6 +73,13 @@ const Labyrinth = ({
                     );
                 }),
             )}
+            <Plane
+                x={width / 200}
+                y={-height / 200}
+                width={width / 100}
+                height={height / 100}
+                texture={wood}
+            />
         </Canvas>
     );
 };
