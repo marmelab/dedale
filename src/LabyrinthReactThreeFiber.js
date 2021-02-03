@@ -1,41 +1,78 @@
-import React, { useRef, useState } from 'react';
-import { Canvas, useFrame } from 'react-three-fiber';
+import React from 'react';
+import { Canvas } from 'react-three-fiber';
 
-const Box = props => {
-    // This reference will give us direct access to the mesh
-    const mesh = useRef();
+import wood from './wood.jpg';
 
-    // Set up state for the hovered and active state
-    const [hovered, setHover] = useState(false);
-    const [active, setActive] = useState(false);
+import Box from './three/Box';
 
-    // Rotate mesh every frame, this is outside of React without overhead
-    useFrame(() => {
-        mesh.current.rotation.x = mesh.current.rotation.y += 0.01;
-    });
-
-    return (
-        <mesh
-            {...props}
-            ref={mesh}
-            scale={active ? [1.5, 1.5, 1.5] : [1, 1, 1]}
-            onClick={event => setActive(!active)}
-            onPointerOver={event => setHover(true)}
-            onPointerOut={event => setHover(false)}
-        >
-            <boxBufferGeometry args={[1, 1, 1]} />
-            <meshStandardMaterial color={hovered ? 'hotpink' : 'orange'} />
-        </mesh>
-    );
-};
-
-const Labyrinth = () => {
+const Labyrinth = ({
+    width,
+    height,
+    xAcceleration,
+    yAcceleration,
+    maze,
+    x,
+    y,
+    go,
+    goal,
+    holes,
+}) => {
     return (
         <Canvas>
             <ambientLight />
             <pointLight position={[10, 10, 10]} />
-            <Box position={[-1.2, 0, 0]} />
-            <Box position={[1.2, 0, 0]} />
+            {maze.map(row =>
+                row.map(({ x, y, top, left, bottom, right }) => {
+                    return (
+                        <>
+                            {top && (
+                                <Box
+                                    key={`${x}-${y}-top`}
+                                    x={x + 0.5}
+                                    y={-y}
+                                    width={1}
+                                    height={0.1}
+                                    depth={1}
+                                    texture={wood}
+                                />
+                            )}
+                            {bottom && (
+                                <Box
+                                    key={`${x}-${y}-bottom`}
+                                    x={x + 0.5}
+                                    y={-y - 1}
+                                    width={1}
+                                    height={0.1}
+                                    depth={1}
+                                    texture={wood}
+                                />
+                            )}
+                            {left && (
+                                <Box
+                                    key={`${x}-${y}-left`}
+                                    x={x}
+                                    y={-y - 0.5}
+                                    width={0.1}
+                                    height={1}
+                                    depth={1}
+                                    texture={wood}
+                                />
+                            )}
+                            {right && (
+                                <Box
+                                    key={`${x}-${y}-right`}
+                                    x={x + 1}
+                                    y={-y - 0.5}
+                                    width={0.1}
+                                    height={1}
+                                    depth={1}
+                                    texture={wood}
+                                />
+                            )}
+                        </>
+                    );
+                }),
+            )}
         </Canvas>
     );
 };
