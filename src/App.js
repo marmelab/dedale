@@ -4,11 +4,18 @@ import NoSleep from 'nosleep.js';
 import useDedale from './useDedale';
 import Labyrinth from './Labyrinth';
 import Labyrinth3D from './Labyrinth3D';
+import LabyrinthThree from './LabyrinthReactThreeFiber';
 
-const debug = false;
+const debug = true;
 
 const width = 800;
 const height = 1000;
+
+const modes = [
+    { value: 'react-three-fiber', label: 'use react-three-fiber' },
+    { value: 'x3dom', label: 'use x3dom' },
+    { value: '2D', label: 'simple dom' },
+];
 
 const App = () => {
     useEffect(() => {
@@ -23,10 +30,10 @@ const App = () => {
     }, []);
     const [{ xAcceleration, yAcceleration }, setMotion] = useState({ x: 0, y: 0 });
     const [supported, setSupported] = useState(true);
-    const [use3D, setUse3D] = useState(true);
+    const [mode, setMode] = useState('react-three-fiber');
 
-    const toggle3D = () => {
-        setUse3D(state => !state);
+    const changeMode = event => {
+        setMode(event.target.value);
     };
 
     useEffect(() => {
@@ -76,7 +83,16 @@ const App = () => {
 
     return (
         <>
-            <button onClick={toggle3D}>toggle3d</button>
+            <div>
+                <label>Switch render mode</label>
+                <select value={mode} onChange={changeMode}>
+                    {modes.map(({ label, value }) => (
+                        <option key={value} value={value}>
+                            {label}
+                        </option>
+                    ))}
+                </select>
+            </div>
             <div onClick={dedaleProps.go} style={{ width, height, position: 'absolute' }}>
                 {lost && (
                     <>
@@ -85,7 +101,7 @@ const App = () => {
                     </>
                 )}
                 {safe && <button onClick={go}>GO</button>}
-                {use3D ? (
+                {mode === 'x3dom' && (
                     <Labyrinth3D
                         width={width}
                         height={height}
@@ -93,8 +109,16 @@ const App = () => {
                         yAcceleration={safe || lost ? 0 : yAcceleration}
                         {...dedaleProps}
                     />
-                ) : (
-                    <Labyrinth {...dedaleProps} width={width} height={height} />
+                )}
+                {mode === '2D' && <Labyrinth {...dedaleProps} width={width} height={height} />}
+                {mode === 'react-three-fiber' && (
+                    <LabyrinthThree
+                        {...dedaleProps}
+                        xAcceleration={safe || lost ? 0 : xAcceleration}
+                        yAcceleration={safe || lost ? 0 : yAcceleration}
+                        width={width}
+                        height={height}
+                    />
                 )}
                 <div
                     style={{
