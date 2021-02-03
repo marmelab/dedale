@@ -21,10 +21,16 @@ const Labyrinth = ({
     holes,
 }) => {
     return (
-        <Canvas>
+        <Canvas camera={{ position: [0, 0, 10] }}>
             <ambientLight />
             <pointLight position={[10, 10, 10]} />
-            <Sphere x={x / 100 + 0.2} y={-y / 100 - 0.2} z={0.2} radius={0.2} texture={metal} />
+            <Sphere
+                x={x / 100 + 0.2 - width / 200}
+                y={-y / 100 - 0.2 + height / 200}
+                z={0.2}
+                radius={0.2}
+                texture={metal}
+            />
             {maze.map(row =>
                 row.map(({ x, y, top, left, bottom, right }) => {
                     return (
@@ -32,8 +38,8 @@ const Labyrinth = ({
                             {top && (
                                 <Box
                                     key={`${x}-${y}-top`}
-                                    x={x + 0.5}
-                                    y={-y}
+                                    x={x + 0.5 - width / 200}
+                                    y={-y + height / 200}
                                     width={1}
                                     height={0.1}
                                     depth={1}
@@ -43,8 +49,8 @@ const Labyrinth = ({
                             {bottom && (
                                 <Box
                                     key={`${x}-${y}-bottom`}
-                                    x={x + 0.5}
-                                    y={-y - 1}
+                                    x={x + 0.5 - width / 200}
+                                    y={-y - 1 + height / 200}
                                     width={1}
                                     height={0.1}
                                     depth={1}
@@ -54,8 +60,8 @@ const Labyrinth = ({
                             {left && (
                                 <Box
                                     key={`${x}-${y}-left`}
-                                    x={x}
-                                    y={-y - 0.5}
+                                    x={x - width / 200}
+                                    y={-y - 0.5 + height / 200}
                                     width={0.1}
                                     height={1}
                                     depth={1}
@@ -65,8 +71,8 @@ const Labyrinth = ({
                             {right && (
                                 <Box
                                     key={`${x}-${y}-right`}
-                                    x={x + 1}
-                                    y={-y - 0.5}
+                                    x={x + 1 - width / 200}
+                                    y={-y - 0.5 + height / 200}
                                     width={0.1}
                                     height={1}
                                     depth={1}
@@ -81,22 +87,22 @@ const Labyrinth = ({
                 return (
                     <Cylinder
                         key={`${x}-${y}`}
-                        x={x + 0.5}
-                        y={-y - 0.5}
+                        x={x + 0.5 - width / 200}
+                        y={-y - 0.5 + height / 200}
                         radius={0.2}
                         height={0.1}
                         color="black"
                     />
                 );
             })}
-            <Cylinder x={goal.x + 0.5} y={-goal.y - 0.5} radius={0.2} height={0.1} color="black" />
-            <Plane
-                x={width / 200}
-                y={-height / 200}
-                width={width / 100}
-                height={height / 100}
-                texture={wood}
+            <Cylinder
+                x={goal.x + 0.5 - width / 200}
+                y={-goal.y - 0.5 + height / 200}
+                radius={0.2}
+                height={0.1}
+                color="green"
             />
+            <Plane x={0} y={0} width={width / 100} height={height / 100} texture={wood} />
         </Canvas>
     );
 };
