@@ -5,7 +5,7 @@ import { useLoader } from 'react-three-fiber';
 const RawBox = ({ x, y, z, width, height, depth, texture }) => {
     const textureMap = useLoader(THREE.TextureLoader, texture);
     return (
-        <mesh position={[x, y, z]} scale={[1, 1, 1]}>
+        <mesh position={[x, y, z]} scale={[1, 1, 1]} castShadow>
             <boxBufferGeometry args={[width, height, depth]} />
             <meshStandardMaterial map={textureMap} />
         </mesh>

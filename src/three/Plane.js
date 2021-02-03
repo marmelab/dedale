@@ -5,7 +5,7 @@ import { useLoader } from 'react-three-fiber';
 const RawPlane = ({ x, y, z, width, height, texture }) => {
     const textureMap = useLoader(THREE.TextureLoader, texture);
     return (
-        <mesh position={[x, y, z]} scale={[1, 1, 1]}>
+        <mesh position={[x, y, z]} scale={[1, 1, 1]} receiveShadow>
             <planeBufferGeometry args={[width, height, 1]} />
             <meshStandardMaterial map={textureMap} />
         </mesh>

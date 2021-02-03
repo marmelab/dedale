@@ -6,7 +6,7 @@ const RawSphere = ({ x, y, z, radius, texture }) => {
     const textureMap = useLoader(THREE.TextureLoader, texture);
 
     return (
-        <mesh position={[x, y, z]} scale={[1, 1, 1]}>
+        <mesh position={[x, y, z]} scale={[1, 1, 1]} castShadow>
             <sphereBufferGeometry args={[radius]} />
             <meshStandardMaterial map={textureMap} />
         </mesh>

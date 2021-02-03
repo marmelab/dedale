@@ -1,5 +1,5 @@
 import React from 'react';
-import { Canvas, Suspense } from 'react-three-fiber';
+import { Canvas, useFrame } from 'react-three-fiber';
 
 import wood from './wood.jpg';
 import metal from './metal.jpg';
@@ -8,22 +8,29 @@ import Plane from './three/Plane';
 import Cylinder from './three/Cylinder';
 import Sphere from './three/Sphere';
 
-const Labyrinth = ({
-    width,
-    height,
-    xAcceleration,
-    yAcceleration,
-    maze,
-    x,
-    y,
-    go,
-    goal,
-    holes,
-}) => {
+const Dolly = ({ xAcceleration = 0, yAcceleration = 0 }) => {
+    useFrame(state => {
+        console.log(state.camera);
+        state.camera.rotation.x = -yAcceleration / 500;
+        state.camera.rotation.y = -xAcceleration / 500;
+        state.camera.updateProjectionMatrix();
+    });
+
+    return null;
+};
+
+const Labyrinth = ({ width, height, xAcceleration, yAcceleration, maze, x, y, goal, holes }) => {
     return (
-        <Canvas camera={{ position: [0, 0, 10] }}>
-            <ambientLight intensity={0.5} />
-            <directionalLight position={[10, 10, 10]} />
+        <Canvas camera={{ position: [0, 0, 8] }} shadowMap>
+            <Dolly xAcceleration={xAcceleration} yAcceleration={yAcceleration} />
+            <ambientLight intensity={0.2} />
+            <directionalLight
+                position={[5, 5, 20]}
+                intensity={0.2}
+                castShadow
+                shadow-mapSize-height={512}
+                shadow-mapSize-width={512}
+            />
             <Sphere
                 x={x / 100 + 0.2 - width / 200}
                 y={-y / 100 - 0.2 + height / 200}
@@ -102,7 +109,7 @@ const Labyrinth = ({
                 height={0.1}
                 color="green"
             />
-            <Plane x={0} y={0} width={width / 100} height={height / 100} texture={wood} />
+            <Plane x={0} y={0} z={0} width={width / 100} height={height / 100} texture={wood} />
         </Canvas>
     );
 };

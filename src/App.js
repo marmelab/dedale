@@ -112,7 +112,13 @@ const App = () => {
                 )}
                 {mode === '2D' && <Labyrinth {...dedaleProps} width={width} height={height} />}
                 {mode === 'react-three-fiber' && (
-                    <LabyrinthThree {...dedaleProps} width={width} height={height} />
+                    <LabyrinthThree
+                        {...dedaleProps}
+                        xAcceleration={safe || lost ? 0 : xAcceleration}
+                        yAcceleration={safe || lost ? 0 : yAcceleration}
+                        width={width}
+                        height={height}
+                    />
                 )}
                 <div
                     style={{
